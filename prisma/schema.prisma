@@ -1,0 +1,167 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleType {
+  ADMIN
+  USER
+  OWNER
+  MEMBER
+}
+
+model Role {
+  id         String       @id @default(uuid()) @db.Char(36)
+  role       RoleType
+  User       User[]
+  RoomMember RoomMember[]
+
+  @@map("roles")
+}
+
+model User {
+  id                String          @id @default(uuid()) @db.Char(36)
+  name              String
+  email             String
+  password          String
+  photo             String
+  roleId            String
+  role              Role            @relation(fields: [roleId], references: [id])
+  Room              Room[]          @relation("UserCreateRelation")
+  RoomMember        RoomMember[]
+  RoomMessage       RoomMessage[]
+  PasswordReset     PasswordReset[]
+  OwnerTransaction  Transaction[]   @relation("TransactionOwnerRelation")
+  MemberTransaction Transaction[]   @relation("TransactionMemberRelation")
+  Payout            Payout[]
+
+  @@map("users")
+}
+
+enum GroupType {
+  FREE
+  PAID
+}
+
+model Group {
+  id          String        @id @default(uuid()) @db.Char(36)
+  name        String
+  photo       String
+  type        GroupType
+  about       String        @db.Text
+  benefit     String[]
+  price       Int
+  createdAt   DateTime      @default(now())
+  GroupAsset  GroupAsset[]
+  Transaction Transaction[]
+
+  @@map("groups")
+}
+
+model GroupAsset {
+  id       String @id @default(uuid()) @db.Char(36)
+  groupId  String
+  group    Group  @relation(fields: [groupId], references: [id])
+  filename String
+
+  @@map("group_assets")
+}
+
+model Room {
+  id            String        @id @default(uuid()) @db.Char(36)
+  name          String?
+  isGroup       Boolean       @default(false)
+  createdBy     String
+  createdByUser User          @relation("UserCreateRelation", fields: [createdBy], references: [id])
+  createdAt     DateTime      @default(now())
+  RoomMember    RoomMember[]
+  RoomMessage   RoomMessage[]
+
+  @@map("rooms")
+}
+
+model RoomMember {
+  id       String   @id @default(uuid()) @db.Char(36)
+  room     Room     @relation(fields: [roomId], references: [id])
+  roomId   String   @db.Char(36)
+  user     User     @relation(fields: [userId], references: [id])
+  userId   String   @db.Char(36)
+  role     Role     @relation(fields: [roleId], references: [id])
+  roleId   String   @db.Char(36)
+  joinedAt DateTime @default(now())
+
+  @@map("room_members")
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+}
+
+model RoomMessage {
+  id        String       @id @default(uuid()) @db.Char(36)
+  room      Room         @relation(fields: [roomId], references: [id])
+  roomId    String       @db.Char(36)
+  user      User         @relation(fields: [senderId], references: [id])
+  senderId  String       @db.Char(36)
+  content   String       @db.Text
+  type      MessageType? @default(TEXT)
+  createdAt DateTime     @default(now())
+
+  @@map("room_messages")
+}
+
+model PasswordReset {
+  id     String @id @default(uuid()) @db.Char(36)
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Char(36)
+  token  String
+
+  @@map("user_password_reset")
+}
+
+enum TransactionType {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model Transaction {
+  id        String           @id @default(uuid()) @db.Char(36)
+  owner     User             @relation("TransactionOwnerRelation", fields: [ownerId], references: [id])
+  ownerId   String           @db.Char(36)
+  User      User             @relation("TransactionMemberRelation", fields: [userId], references: [id])
+  userId    String           @db.Char(36)
+  group     Group            @relation(fields: [groupId], references: [id])
+  groupId   String           @db.Char(36)
+  price     Int
+  type      TransactionType? @default(PENDING)
+  createdAt DateTime         @default(now())
+
+  @@map("transactions")
+}
+
+model Payout {
+  id                String          @id @default(uuid()) @db.Char(36)
+  user              User            @relation(fields: [userId], references: [id])
+  userId            String          @db.Char(36)
+  amount            Int
+  bankName          String
+  bankAccountNumber String
+  bankAccountName   String
+  status            TransactionType @default(PENDING)
+  proof             String?         @db.Text
+  createdAt         DateTime        @default(now())
+
+  @@map("payouts")
+}
