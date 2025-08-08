@@ -1,4 +1,8 @@
-import { signInSchema, SignUpValues } from "../utils/schema/user";
+import {
+  ResetPasswordValues,
+  SignInValues,
+  SignUpValues,
+} from "../utils/schema/user";
 import * as userRepositories from "../repositories/userRepositories";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -32,7 +36,7 @@ export const signUp = async (data: SignUpValues, file: Express.Multer.File) => {
   };
 };
 
-export const signIn = async (data: signInSchema) => {
+export const signIn = async (data: SignInValues) => {
   const isEmailExist = await userRepositories.isEmailExist(data.email);
 
   if (isEmailExist === 0) {
@@ -70,6 +74,26 @@ export const getEmailReset = async (email: string) => {
     subject: "Reset Password",
     text: `Berikut Link Reset Password ${data.token}`, // link ke halama frontend
   });
+
+  return true;
+};
+
+export const updatePassword = async (
+  data: ResetPasswordValues,
+  token: string
+) => {
+  const tokenData = await userRepositories.findResetDataByToken(token);
+
+  if (!tokenData) {
+    throw new Error("Token Reset Invalid");
+  }
+
+  await userRepositories.updatePassword(
+    tokenData.user.email,
+    bcrypt.hashSync(data.password, 12)
+  );
+
+  await userRepositories.deleteTokenResetById(tokenData.id);
 
   return true;
 };

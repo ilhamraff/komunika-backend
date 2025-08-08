@@ -26,4 +26,6 @@ userRoutes.post("/auth/sign-in", userController.signIn);
 
 userRoutes.post("/auth/reset-password", userController.getEmailReset);
 
+userRoutes.put("/auth/reset-password/:tokenId", userController.updatePassword);
+
 export default userRoutes;
