@@ -31,3 +31,11 @@ export const createUser = async (data: SignUpValues, photo: string) => {
     },
   });
 };
+
+export const findUserByEmail = async (email: string) => {
+  return await prismaClient.user.findFirstOrThrow({
+    where: {
+      email: email,
+    },
+  });
+};
