@@ -6,7 +6,6 @@ import {
 } from "../utils/schema/user";
 import fs from "node:fs";
 import * as userService from "../services/userService";
-import { success } from "zod";
 
 export const signUp = async (
   req: Request,

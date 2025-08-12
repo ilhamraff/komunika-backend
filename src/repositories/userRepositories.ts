@@ -3,6 +3,17 @@ import prismaClient from "../utils/prisma";
 import { SignUpValues } from "../utils/schema/user";
 import crypto from "node:crypto";
 
+export const getUserById = async (id: string) => {
+  return await prismaClient.user.findFirstOrThrow({
+    where: {
+      id,
+    },
+    include: {
+      role: true,
+    },
+  });
+};
+
 export const isEmailExist = async (email: string) => {
   return await prismaClient.user.count({
     where: {
