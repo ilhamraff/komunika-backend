@@ -1,4 +1,4 @@
-import { GroupFreeValues } from "../utils/schema/group";
+import { GroupFreeValues, GroupPaidValues } from "../utils/schema/group";
 import * as userRepositories from "../repositories/userRepositories";
 import prismaClient from "../utils/prisma";
 
@@ -31,4 +31,50 @@ export const createFreeGroup = async (
       },
     },
   });
+};
+
+export const createPaidGroup = async (
+  data: GroupPaidValues,
+  photo: string,
+  userId: string,
+  assets?: string[]
+) => {
+  const owner = await userRepositories.findRole("OWNER");
+
+  const group = await prismaClient.group.create({
+    data: {
+      photo: photo,
+      name: data.name,
+      about: data.about,
+      price: Number.parseInt(data.price),
+      benefit: data.benefit,
+      type: "FREE",
+      room: {
+        create: {
+          createdBy: userId,
+          name: data.name,
+          RoomMember: {
+            create: {
+              userId: userId,
+              roleId: owner.id,
+            },
+          },
+          isGroup: true,
+        },
+      },
+    },
+  });
+
+  if (assets) {
+    for (const asset of assets) {
+      await prismaClient.groupAsset.create({
+        data: {
+          filename: asset,
+          groupId: group.id,
+        },
+      });
+    }
+  }
+
+  return group;
 };
