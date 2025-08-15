@@ -50,22 +50,26 @@ export const upsertFreeGroup = async (
   });
 };
 
-export const createPaidGroup = async (
+export const upsertPaidGroup = async (
   data: GroupPaidValues,
-  photo: string,
   userId: string,
-  assets?: string[]
+  photo?: string,
+  assets?: string[],
+  groupId?: string
 ) => {
   const owner = await userRepositories.findRole("OWNER");
 
-  const group = await prismaClient.group.create({
-    data: {
-      photo: photo,
+  const group = await prismaClient.group.upsert({
+    where: {
+      id: groupId,
+    },
+    create: {
+      photo: photo ?? "",
       name: data.name,
       about: data.about,
       price: Number.parseInt(data.price),
       benefit: data.benefit,
-      type: "FREE",
+      type: "PAID",
       room: {
         create: {
           createdBy: userId,
@@ -79,6 +83,14 @@ export const createPaidGroup = async (
           isGroup: true,
         },
       },
+    },
+    update: {
+      photo: photo ?? "",
+      name: data.name,
+      about: data.about,
+      price: Number.parseInt(data.price),
+      benefit: data.benefit,
+      type: "PAID",
     },
   });
 

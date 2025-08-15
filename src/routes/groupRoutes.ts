@@ -54,4 +54,11 @@ groupRoutes.post(
   groupController.createPaidGroup
 );
 
+groupRoutes.put(
+  "/groups/paid/:groupId",
+  verifyToken,
+  uploadPhotoPaid.fields([{ name: "photo", maxCount: 1 }, { name: "assets" }]),
+  groupController.updatePaidGroup
+);
+
 export default groupRoutes;

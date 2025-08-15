@@ -26,17 +26,31 @@ export const upsertFreeGroup = async (
   return group;
 };
 
-export const createPaidGroup = async (
+export const upsertPaidGroup = async (
   data: GroupPaidValues,
-  photo: string,
   userId: string,
-  assets?: string[]
+  photo?: string,
+  assets?: string[],
+  groupId?: string
 ) => {
-  const group = await groupRepositories.createPaidGroup(
+  if (groupId && photo) {
+    const group = await groupRepositories.findGroupById(groupId);
+
+    const pathPhoto = path.join(
+      __dirname,
+      "../../public/assets/uploads/groups",
+      group.photo
+    );
+
+    if (fs.existsSync(pathPhoto)) fs.unlinkSync(pathPhoto);
+  }
+
+  const group = await groupRepositories.upsertPaidGroup(
     data,
-    photo,
     userId,
-    assets
+    photo,
+    assets,
+    groupId
   );
 
   return group;
