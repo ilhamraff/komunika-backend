@@ -4,6 +4,26 @@ import { groupFreeSchema, groupPaidSchema } from "../utils/schema/group";
 import * as groupService from "../services/groupService";
 import { date, success } from "zod";
 
+export const getDiscoverGroups = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { name } = req.query;
+
+    const data = await groupService.getDiscoverGroups((name as string) ?? "");
+
+    return res.json({
+      success: true,
+      message: "Get discover group success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const createFreeGroup = async (
   req: CustomRequest,
   res: Response,

@@ -3,6 +3,10 @@ import * as groupRepositories from "../repositories/groupRepositories";
 import fs from "node:fs";
 import path from "node:path";
 
+export const getDiscoverGroups = async (name?: string) => {
+  return await groupRepositories.getDiscoverGroups(name);
+};
+
 export const upsertFreeGroup = async (
   data: GroupFreeValues,
   userId: string,
@@ -21,7 +25,12 @@ export const upsertFreeGroup = async (
     if (fs.existsSync(pathPhoto)) fs.unlinkSync(pathPhoto);
   }
 
-  const group = await groupRepositories.upsertFreeGroup(data, userId, photo);
+  const group = await groupRepositories.upsertFreeGroup(
+    data,
+    userId,
+    photo,
+    groupId
+  );
 
   return group;
 };
@@ -36,13 +45,18 @@ export const upsertPaidGroup = async (
   if (groupId && photo) {
     const group = await groupRepositories.findGroupById(groupId);
 
-    const pathPhoto = path.join(
-      __dirname,
-      "../../public/assets/uploads/groups",
-      group.photo
-    );
+    if (group?.photo) {
+      // pastikan ada filename
+      const pathPhoto = path.join(
+        __dirname,
+        "../../public/assets/uploads/groups",
+        group.photo
+      );
 
-    if (fs.existsSync(pathPhoto)) fs.unlinkSync(pathPhoto);
+      if (fs.existsSync(pathPhoto) && fs.lstatSync(pathPhoto).isFile()) {
+        fs.unlinkSync(pathPhoto);
+      }
+    }
   }
 
   const group = await groupRepositories.upsertPaidGroup(

@@ -10,6 +10,33 @@ export const findGroupById = async (id: string) => {
   });
 };
 
+export const getDiscoverGroups = async (name = "") => {
+  return await prismaClient.group.findMany({
+    where: {
+      name: {
+        contains: name,
+        mode: "insensitive",
+      },
+    },
+    select: {
+      photo_url: true,
+      id: true,
+      name: true,
+      about: true,
+      type: true,
+      room: {
+        select: {
+          _count: {
+            select: {
+              RoomMessage: true,
+            },
+          },
+        },
+      },
+    },
+  });
+};
+
 export const upsertFreeGroup = async (
   data: GroupFreeValues,
   userId: string,
