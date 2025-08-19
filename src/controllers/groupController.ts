@@ -24,6 +24,29 @@ export const getDiscoverGroups = async (
   }
 };
 
+export const getDiscoverPeoples = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { name } = req.query;
+
+    const data = await groupService.getDiscoverPeoples(
+      (name as string) ?? "",
+      req?.user?.id
+    );
+
+    return res.json({
+      success: true,
+      message: "Get discover peoples success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const createFreeGroup = async (
   req: CustomRequest,
   res: Response,

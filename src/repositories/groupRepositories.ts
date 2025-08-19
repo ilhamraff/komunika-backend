@@ -37,6 +37,25 @@ export const getDiscoverGroups = async (name = "") => {
   });
 };
 
+export const getDiscoverPeoples = async (name = "", userId?: string) => {
+  return await prismaClient.user.findMany({
+    where: {
+      id: {
+        not: userId,
+      },
+      name: {
+        contains: name,
+        mode: "insensitive",
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      photo_url: true,
+    },
+  });
+};
+
 export const upsertFreeGroup = async (
   data: GroupFreeValues,
   userId: string,

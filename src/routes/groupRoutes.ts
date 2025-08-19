@@ -10,10 +10,10 @@ const uploadPhoto = multer({
   storage: storageGroupPhoto,
   fileFilter(req, file, callback) {
     if (file.mimetype.startsWith("image/")) {
-      callback(null, false);
+      callback(null, true);
     }
 
-    callback(null, true);
+    callback(null, false);
   },
 });
 
@@ -33,7 +33,9 @@ const uploadPhotoPaid = multer({
   //   },
 });
 
-groupRoutes.get("/groups", groupController.getDiscoverGroups);
+groupRoutes.get("/groups", verifyToken, groupController.getDiscoverGroups);
+
+groupRoutes.get("/peoples", verifyToken, groupController.getDiscoverPeoples);
 
 groupRoutes.post(
   "/groups/free",

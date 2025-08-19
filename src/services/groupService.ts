@@ -7,6 +7,10 @@ export const getDiscoverGroups = async (name?: string) => {
   return await groupRepositories.getDiscoverGroups(name);
 };
 
+export const getDiscoverPeoples = async (name?: string, userId?: string) => {
+  return await groupRepositories.getDiscoverPeoples(name, userId);
+};
+
 export const upsertFreeGroup = async (
   data: GroupFreeValues,
   userId: string,
