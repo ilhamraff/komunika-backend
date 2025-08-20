@@ -9,7 +9,7 @@ const prismaClient = new PrismaClient().$extends({
         },
         compute(data) {
           if (data.photo) {
-            return `${process.env.URL_ASSET_PHOTO}${data.photo}`;
+            return `${process.env.URL_ASSET_PHOTO}/${data.photo}`;
           }
         },
       },
@@ -21,7 +21,7 @@ const prismaClient = new PrismaClient().$extends({
         },
         compute(data) {
           if (data.photo) {
-            return `${process.env.URL_ASSET_GROUP_PHOTO}${data.photo}`;
+            return `${process.env.URL_ASSET_GROUP_PHOTO}/${data.photo}`;
           }
         },
       },

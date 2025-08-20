@@ -10,10 +10,10 @@ const uploadPhoto = multer({
   storage: storageGroupPhoto,
   fileFilter(req, file, callback) {
     if (file.mimetype.startsWith("image/")) {
-      callback(null, true);
+      callback(null, false);
     }
 
-    callback(null, false);
+    callback(null, true);
   },
 });
 
