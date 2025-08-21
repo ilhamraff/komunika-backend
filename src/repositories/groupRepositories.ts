@@ -199,3 +199,39 @@ export const findDetailGroup = async (id: string, userId: string) => {
     },
   });
 };
+
+export const getMyOwnGroups = async (userId: string) => {
+  return await prismaClient.group.findMany({
+    where: {
+      room: {
+        createdBy: userId,
+      },
+    },
+    select: {
+      id: true,
+      photo_url: true,
+      name: true,
+      type: true,
+      room: {
+        select: {
+          _count: {
+            select: {
+              RoomMember: true,
+            },
+          },
+          id: true,
+        },
+      },
+    },
+  });
+};
+
+export const getTotalMembers = async (roomIds: string[]) => {
+  return await prismaClient.roomMember.count({
+    where: {
+      roomId: {
+        in: roomIds,
+      },
+    },
+  });
+};

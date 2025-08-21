@@ -77,3 +77,34 @@ export const upsertPaidGroup = async (
 
   return group;
 };
+
+export const getMyOwnGroups = async (userId: string) => {
+  const groups = await groupRepositories.getMyOwnGroups(userId);
+
+  const paidGroups = groups.filter((item) => {
+    return item.type === "PAID";
+  }).length;
+
+  const freeGroups = groups.filter((item) => {
+    return item.type === "FREE";
+  }).length;
+
+  const totalMembers = await groupRepositories.getTotalMembers(
+    groups.map((item) => item.room.id)
+  );
+
+  return {
+    lists: groups.map((item) => {
+      return {
+        id: item.id,
+        photo_url: item.photo_url,
+        name: item.name,
+        type: item.type,
+        totalMembers: item.room._count.RoomMember,
+      };
+    }),
+    paidGroups: paidGroups,
+    freeGroups: freeGroups,
+    totalMembers: totalMembers,
+  };
+};
