@@ -235,3 +235,28 @@ export const getTotalMembers = async (roomIds: string[]) => {
     },
   });
 };
+
+export const getMemberById = async (userId: string, groupId: string) => {
+  return await prismaClient.roomMember.findFirst({
+    where: {
+      userId: userId,
+      room: {
+        Group: {
+          id: groupId,
+        },
+      },
+    },
+  });
+};
+
+export const addMemberToGroup = async (roomId: string, userId: string) => {
+  const role = await userRepositories.findRole("MEMBER");
+
+  return await prismaClient.roomMember.create({
+    data: {
+      roomId: roomId,
+      userId: userId,
+      roleId: role.id,
+    },
+  });
+};
