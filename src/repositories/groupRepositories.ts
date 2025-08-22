@@ -7,6 +7,22 @@ export const findGroupById = async (id: string) => {
     where: {
       id,
     },
+    include: {
+      room: {
+        select: {
+          RoomMember: {
+            include: {
+              role: true,
+            },
+            where: {
+              role: {
+                role: "OWNER",
+              },
+            },
+          },
+        },
+      },
+    },
   });
 };
 
