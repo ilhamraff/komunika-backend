@@ -75,4 +75,10 @@ groupRoutes.post(
   groupController.createMemberFreeGroup
 );
 
+groupRoutes.delete(
+  "/groups/asset/:id",
+  verifyToken,
+  groupController.deleteAssetGroup
+);
+
 export default groupRoutes;

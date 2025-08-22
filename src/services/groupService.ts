@@ -126,3 +126,26 @@ export const addMemberFreeGroup = async (groupId: string, userId: string) => {
 
   return true;
 };
+
+export const deleteAssetGroup = async (assetId: string) => {
+  const asset = await groupRepositories.findAssetGroup(assetId);
+
+  if (
+    fs.existsSync(
+      path.join(
+        __dirname,
+        "../../public/assets/uploads/group_assets/",
+        asset.filename
+      )
+    )
+  )
+    fs.unlinkSync(
+      path.join(
+        __dirname,
+        "../../public/assets/uploads/group_assets/",
+        asset.filename
+      )
+    );
+
+  return await groupRepositories.deleteAssetGroup(assetId);
+};
