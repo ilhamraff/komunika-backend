@@ -62,6 +62,8 @@ export const getRooms = async (userId: string) => {
       RoomMessage: {
         select: {
           content: true,
+          type: true,
+          content_url: true,
           user: {
             select: {
               name: true,
@@ -114,6 +116,7 @@ export const getRoomMessages = async (roomId: string) => {
         select: {
           content: true,
           type: true,
+          content_url: true,
           user: {
             select: {
               id: true,

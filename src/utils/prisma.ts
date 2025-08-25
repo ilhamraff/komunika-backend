@@ -26,6 +26,21 @@ const prismaClient = new PrismaClient().$extends({
         },
       },
     },
+    roomMessage: {
+      content_url: {
+        needs: {
+          content: true,
+          type: true,
+        },
+        compute(data) {
+          if (data.type === "IMAGE") {
+            return `${process.env.URL_ASSET_ATTACH}/${data.content}`;
+          }
+
+          return data.content;
+        },
+      },
+    },
   },
 });
 
