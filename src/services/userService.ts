@@ -20,7 +20,7 @@ export const signUp = async (data: SignUpValues, file: Express.Multer.File) => {
       ...data,
       password: bcrypt.hashSync(data.password, 12),
     },
-    file.fieldname
+    file.filename
   );
 
   const token = jwt.sign({ id: user.id }, process.env.SECRET_AUTH ?? "", {
