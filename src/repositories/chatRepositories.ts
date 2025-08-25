@@ -100,3 +100,48 @@ export const getRooms = async (userId: string) => {
     },
   });
 };
+
+export const getRoomMessages = async (roomId: string) => {
+  return await prismaClient.room.findFirst({
+    where: {
+      id: roomId,
+    },
+    select: {
+      id: true,
+      isGroup: true,
+      RoomMessage: {
+        select: {
+          content: true,
+          type: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              photo_url: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      Group: {
+        select: {
+          name: true,
+          photo_url: true,
+        },
+      },
+      RoomMember: {
+        select: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              photo_url: true,
+            },
+          },
+        },
+      },
+    },
+  });
+};

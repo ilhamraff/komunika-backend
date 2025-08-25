@@ -6,6 +6,12 @@ const chatRoutes = express.Router();
 
 chatRoutes.get("/chat/rooms", verifyToken, chatController.getRooms);
 
+chatRoutes.get(
+  "/chat/rooms/:roomId",
+  verifyToken,
+  chatController.getRoomsMessages
+);
+
 chatRoutes.post("/chat/rooms", verifyToken, chatController.creataRoomPersonal);
 
 export default chatRoutes;
