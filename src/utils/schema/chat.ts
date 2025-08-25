@@ -6,4 +6,10 @@ export const createRoomPersonalSchema = z
   })
   .strict();
 
+export const createMessageSchema = z.object({
+  message: z.string(),
+  roomId: z.string(),
+});
+
 export type CreateRoomPersonalValue = z.infer<typeof createRoomPersonalSchema>;
+export type CreateMessageValues = z.infer<typeof createMessageSchema>;

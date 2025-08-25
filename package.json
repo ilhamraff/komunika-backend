@@ -21,6 +21,7 @@
     "jsonwebtoken": "^9.0.2",
     "mailtrap": "^3.4.0",
     "multer": "^2.0.2",
+    "pusher": "^5.2.0",
     "zod": "^4.0.15"
   },
   "devDependencies": {
