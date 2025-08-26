@@ -143,3 +143,7 @@ export const getRevenueStat = async (userId: string) => {
     latestMembersVip: latestMembersVip,
   };
 };
+
+export const getHistoryPayouts = async (userId: string) => {
+  return await transactionRepositories.getMyPayouts(userId);
+};
