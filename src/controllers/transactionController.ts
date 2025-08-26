@@ -58,3 +58,21 @@ export const updateTransaction = async (
     next(error);
   }
 };
+
+export const getRevenueStat = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = await transactionService.getRevenueStat(req?.user?.id ?? "");
+
+    return res.json({
+      success: true,
+      message: "Success get revenue stat",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

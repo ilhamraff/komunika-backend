@@ -19,3 +19,33 @@ export const updateTransaction = async (id: string, type: TransactionType) => {
     },
   });
 };
+
+export const getMyTransactions = async (userId: string) => {
+  return await prismaClient.transaction.findMany({
+    where: {
+      ownerId: userId,
+    },
+    include: {
+      User: {
+        select: {
+          name: true,
+          photo_url: true,
+        },
+      },
+      group: {
+        select: {
+          name: true,
+          photo_url: true,
+        },
+      },
+    },
+  });
+};
+
+export const getMyPayouts = async (userId: string) => {
+  return await prismaClient.payout.findMany({
+    where: {
+      userId,
+    },
+  });
+};

@@ -1,3 +1,4 @@
+import { group } from "node:console";
 import * as groupRepositories from "../repositories/groupRepositories";
 import * as transactionRepositories from "../repositories/transactionRepositories";
 import * as userRepositories from "../repositories/userRepositories";
@@ -102,4 +103,43 @@ export const updateTransaction = async (order_id: string, status: string) => {
     default:
       return {};
   }
+};
+
+export const getRevenueStat = async (userId: string) => {
+  const transactions = await transactionRepositories.getMyTransactions(userId);
+  const payouts = await transactionRepositories.getMyPayouts(userId);
+  const groups = await groupRepositories.getMyOwnGroups(userId);
+
+  const totalRevenue = transactions.reduce((acc, curr) => {
+    if (curr.type === "SUCCESS") {
+      return acc + curr.price;
+    }
+
+    return acc;
+  }, 0);
+
+  const totalPayouts = payouts.reduce((acc, curr) => acc + curr.amount, 0);
+
+  const balance = totalRevenue - totalPayouts;
+
+  const totalVipGroups = groups.filter((group) => group.type === "PAID").length;
+  const totalVipMembers = groups.reduce((acc, curr) => {
+    if (curr.type === "PAID") {
+      return acc + (curr?.room?._count?.RoomMember ?? 0);
+    }
+
+    return acc;
+  }, 0);
+
+  const latestMembersVip = transactions.filter(
+    (transaction) => transaction.type === "SUCCESS"
+  );
+
+  return {
+    balance,
+    totalVipGroups: totalVipGroups,
+    totalVipMembers: totalVipMembers,
+    totalRevenue: totalRevenue,
+    latestMembersVip: latestMembersVip,
+  };
 };
