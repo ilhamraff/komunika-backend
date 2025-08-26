@@ -27,6 +27,12 @@ transactionRoutes.get(
   transactionController.getHistoryPayouts
 );
 
+transactionRoutes.post(
+  "/payouts",
+  verifyToken,
+  transactionController.createWithdraw
+);
+
 transactionRoutes.get(
   "/balance",
   verifyToken,

@@ -1,5 +1,6 @@
 import { Prisma, TransactionType } from "@prisma/client";
 import prismaClient from "../utils/prisma";
+import { WithdrawValues } from "../utils/schema/transaction";
 
 export const createTransaction = async (
   data: Prisma.TransactionCreateInput
@@ -49,6 +50,19 @@ export const getMyPayouts = async (userId: string) => {
     },
     orderBy: {
       createdAt: "desc",
+    },
+  });
+};
+
+export const createWithdraw = async (data: WithdrawValues, userId: string) => {
+  return await prismaClient.payout.create({
+    data: {
+      amount: data.amount,
+      bankName: data.bankName,
+      bankAccountName: data.bankAccountName,
+      bankAccountNumber: data.bankAccountNumber.toString(),
+      userId: userId,
+      status: "PENDING",
     },
   });
 };

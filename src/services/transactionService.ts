@@ -2,6 +2,7 @@ import { group } from "node:console";
 import * as groupRepositories from "../repositories/groupRepositories";
 import * as transactionRepositories from "../repositories/transactionRepositories";
 import * as userRepositories from "../repositories/userRepositories";
+import { WithdrawValues } from "../utils/schema/transaction";
 
 export const createTransaction = async (groupId: string, userId: string) => {
   const checkMember = await groupRepositories.getMemberById(userId, groupId);
@@ -163,4 +164,14 @@ export const getRevenueStat = async (userId: string) => {
 
 export const getHistoryPayouts = async (userId: string) => {
   return await transactionRepositories.getMyPayouts(userId);
+};
+
+export const createWithdraw = async (data: WithdrawValues, userId: string) => {
+  const balance = await getBalance(userId);
+
+  if (balance < data.amount) {
+    throw new Error("Failed to create withdraw: Insufficient balance");
+  }
+
+  return await transactionRepositories.createWithdraw(data, userId);
 };
