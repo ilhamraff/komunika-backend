@@ -72,7 +72,7 @@ export const getEmailReset = async (email: string) => {
     },
     to: [{ email: email }],
     subject: "Reset Password",
-    text: `Berikut Link Reset Password ${data.token}`, // link ke halama frontend
+    text: `Berikut Link Reset Password ${process.env.RESET_PASSWORD_LINK}${data.token}`, // link ke halama frontend
   });
 
   return true;
