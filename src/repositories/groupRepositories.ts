@@ -44,7 +44,7 @@ export const getDiscoverGroups = async (name = "") => {
         select: {
           _count: {
             select: {
-              RoomMessage: true,
+              RoomMember: true,
             },
           },
         },
