@@ -44,6 +44,7 @@ model User {
   OwnerTransaction  Transaction[]   @relation("TransactionOwnerRelation")
   MemberTransaction Transaction[]   @relation("TransactionMemberRelation")
   Payout            Payout[]
+  createdAt         DateTime        @default(now())
 
   @@map("users")
 }

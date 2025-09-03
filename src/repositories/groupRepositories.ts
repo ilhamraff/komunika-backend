@@ -68,6 +68,7 @@ export const getDiscoverPeoples = async (name = "", userId?: string) => {
       id: true,
       name: true,
       photo_url: true,
+      createdAt: true,
     },
   });
 };
