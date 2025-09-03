@@ -4,6 +4,10 @@ import * as transactionRepositories from "../repositories/transactionRepositorie
 import * as userRepositories from "../repositories/userRepositories";
 import { WithdrawValues } from "../utils/schema/transaction";
 
+export const findTransactionById = async (id: string) => {
+  return await transactionRepositories.findTransactionById(id);
+};
+
 export const createTransaction = async (groupId: string, userId: string) => {
   const checkMember = await groupRepositories.getMemberById(userId, groupId);
 

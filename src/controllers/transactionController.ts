@@ -4,6 +4,25 @@ import { joinFreeGroup } from "../utils/schema/group";
 import * as transactionService from "../services/transactionService";
 import { withdrawSchema } from "../utils/schema/transaction";
 
+export const findTransactionById = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const data = await transactionService.findTransactionById(id);
+
+    return res.json({
+      success: true,
+      message: "Success get transaction",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const createTransaction = async (
   req: CustomRequest,
   res: Response,

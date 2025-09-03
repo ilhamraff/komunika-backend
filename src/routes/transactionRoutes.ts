@@ -4,6 +4,11 @@ import * as transactionController from "../controllers/transactionController";
 
 const transactionRoutes = express.Router();
 
+transactionRoutes.get(
+  "/transaction/:id",
+  transactionController.findTransactionById
+);
+
 transactionRoutes.post(
   "/transaction",
   verifyToken,

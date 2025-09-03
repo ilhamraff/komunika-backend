@@ -2,6 +2,34 @@ import { Prisma, TransactionType } from "@prisma/client";
 import prismaClient from "../utils/prisma";
 import { WithdrawValues } from "../utils/schema/transaction";
 
+export const findTransactionById = async (id: string) => {
+  return await prismaClient.transaction.findFirstOrThrow({
+    where: {
+      id,
+    },
+    select: {
+      createdAt: true,
+      price: true,
+      type: true,
+      group: {
+        select: {
+          photo_url: true,
+          name: true,
+          room: {
+            select: {
+              _count: {
+                select: {
+                  RoomMember: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+};
+
 export const createTransaction = async (
   data: Prisma.TransactionCreateInput
 ) => {
