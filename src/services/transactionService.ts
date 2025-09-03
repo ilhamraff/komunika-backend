@@ -64,6 +64,9 @@ export const createTransaction = async (groupId: string, userId: string) => {
       customer_details: {
         email: user.email,
       },
+      callbacks: {
+        finish: process.env.SUCCESS_TRANSACTION_URL,
+      },
     }),
   });
 
