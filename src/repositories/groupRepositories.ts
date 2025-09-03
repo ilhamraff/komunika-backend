@@ -175,9 +175,9 @@ export const findDetailGroup = async (id: string, userId: string) => {
   return await prismaClient.group.findFirstOrThrow({
     where: {
       id: id,
-      room: {
-        createdBy: userId,
-      },
+      // room: {
+      //   createdBy: userId,
+      // },
     },
     select: {
       id: true,
@@ -188,14 +188,19 @@ export const findDetailGroup = async (id: string, userId: string) => {
       GroupAsset: {
         select: {
           filename: true,
+          id: true,
         },
       },
+      price: true,
+      benefit: true,
       room: {
         select: {
           RoomMember: {
             take: 1,
             where: {
-              userId: userId,
+              role: {
+                role: "OWNER",
+              },
             },
             select: {
               user: {
@@ -204,6 +209,7 @@ export const findDetailGroup = async (id: string, userId: string) => {
                   photo_url: true,
                 },
               },
+              joinedAt: true,
             },
           },
           _count: {
