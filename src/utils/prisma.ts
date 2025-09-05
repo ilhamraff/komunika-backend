@@ -41,6 +41,16 @@ const prismaClient = new PrismaClient().$extends({
         },
       },
     },
+    groupAsset: {
+      file_url: {
+        needs: {
+          filename: true,
+        },
+        compute(data) {
+          return `${process.env.URL_ASSET_GROUP}/${data.filename}`;
+        },
+      },
+    },
   },
 });
 

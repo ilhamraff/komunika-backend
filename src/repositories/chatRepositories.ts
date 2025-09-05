@@ -124,7 +124,7 @@ export const getRoomMessages = async (roomId: string) => {
           createdAt: true,
         },
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         },
       },
       Group: {
@@ -134,6 +134,7 @@ export const getRoomMessages = async (roomId: string) => {
           type: true,
           GroupAsset: true,
           benefit: true,
+          about: true,
           room: {
             select: {
               _count: {
@@ -154,6 +155,12 @@ export const getRoomMessages = async (roomId: string) => {
               photo_url: true,
             },
           },
+          role: {
+            select: {
+              role: true,
+            },
+          },
+          joinedAt: true,
         },
       },
     },
@@ -173,6 +180,15 @@ export const findMember = async (userId: string, roomId: string) => {
     where: {
       roomId: roomId,
       userId: userId,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          photo_url: true,
+        },
+      },
     },
   });
 };
