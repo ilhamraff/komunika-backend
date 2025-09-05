@@ -70,6 +70,7 @@ export const getRooms = async (userId: string) => {
               photo_url: true,
             },
           },
+          createdAt: true,
         },
         take: 1,
         orderBy: {
@@ -80,14 +81,10 @@ export const getRooms = async (userId: string) => {
         select: {
           user: {
             select: {
+              id: true,
               name: true,
               photo_url: true,
             },
-          },
-        },
-        where: {
-          role: {
-            role: "MEMBER",
           },
         },
       },
@@ -124,6 +121,7 @@ export const getRoomMessages = async (roomId: string) => {
               photo_url: true,
             },
           },
+          createdAt: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -133,6 +131,18 @@ export const getRoomMessages = async (roomId: string) => {
         select: {
           name: true,
           photo_url: true,
+          type: true,
+          GroupAsset: true,
+          benefit: true,
+          room: {
+            select: {
+              _count: {
+                select: {
+                  RoomMember: true,
+                },
+              },
+            },
+          },
         },
       },
       RoomMember: {
