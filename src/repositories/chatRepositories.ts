@@ -153,6 +153,7 @@ export const getRoomMessages = async (roomId: string) => {
               id: true,
               name: true,
               photo_url: true,
+              createdAt: true,
             },
           },
           role: {

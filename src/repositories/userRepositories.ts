@@ -100,3 +100,52 @@ export const deleteTokenResetById = async (id: string) => {
     },
   });
 };
+
+export const getPersonalProfile = async (id: string) => {
+  const user = await prismaClient.user.findFirstOrThrow({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      name: true,
+      photo_url: true,
+      createdAt: true,
+    },
+  });
+
+  const groups = await prismaClient.group.findMany({
+    where: {
+      room: {
+        isGroup: true,
+        RoomMember: {
+          some: {
+            userId: id,
+          },
+        },
+      },
+    },
+    select: {
+      name: true,
+      photo_url: true,
+      type: true,
+      room: {
+        select: {
+          RoomMember: {
+            where: {
+              userId: id,
+            },
+            select: {
+              joinedAt: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return {
+    ...user,
+    groups,
+  };
+};

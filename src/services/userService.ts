@@ -97,3 +97,7 @@ export const updatePassword = async (
 
   return true;
 };
+
+export const getPersonalProfile = async (id: string) => {
+  return await userRepositories.getPersonalProfile(id);
+};

@@ -143,3 +143,23 @@ export const updatePassword = async (
     next(error);
   }
 };
+
+export const getPersonalProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+
+    const data = await userService.getPersonalProfile(id);
+
+    return res.json({
+      success: true,
+      message: "Success get personal profile",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

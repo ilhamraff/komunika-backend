@@ -2,6 +2,7 @@ import express from "express";
 import multer from "multer";
 import { storageUserPhoto } from "../utils/multer";
 import * as userController from "../controllers/userController";
+import verifyToken from "../middlewares/verifyToken";
 
 const userRoutes = express.Router();
 
@@ -27,5 +28,11 @@ userRoutes.post("/auth/sign-in", userController.signIn);
 userRoutes.post("/auth/reset-password", userController.getEmailReset);
 
 userRoutes.put("/auth/reset-password/:tokenId", userController.updatePassword);
+
+userRoutes.get(
+  "/user/profile/:id",
+  verifyToken,
+  userController.getPersonalProfile
+);
 
 export default userRoutes;
