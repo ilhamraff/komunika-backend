@@ -77,7 +77,27 @@ export const findDetailGroup = async (
   try {
     const { id } = req.params;
 
-    const data = await groupService.findDetailGroup(id, req.user?.id ?? "");
+    const data = await groupService.findDetailGroup(id);
+
+    return res.json({
+      success: true,
+      message: "Get detail group success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const findDetailMyGroup = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+
+    const data = await groupService.findDetailMyGroup(id, req?.user?.id ?? "");
 
     return res.json({
       success: true,

@@ -171,13 +171,17 @@ export const upsertPaidGroup = async (
   return group;
 };
 
-export const findDetailGroup = async (id: string, userId: string) => {
+export const findDetailGroup = async (id: string, userId?: string) => {
   return await prismaClient.group.findFirstOrThrow({
     where: {
       id: id,
-      // room: {
-      //   createdBy: userId,
-      // },
+      ...(userId !== undefined
+        ? {
+            room: {
+              createdBy: userId,
+            },
+          }
+        : {}),
     },
     select: {
       id: true,
@@ -189,6 +193,7 @@ export const findDetailGroup = async (id: string, userId: string) => {
         select: {
           filename: true,
           id: true,
+          ...(userId !== undefined ? { file_url: true } : {}),
         },
       },
       price: true,
@@ -196,12 +201,16 @@ export const findDetailGroup = async (id: string, userId: string) => {
       room: {
         select: {
           RoomMember: {
-            take: 1,
-            where: {
-              role: {
-                role: "OWNER",
-              },
-            },
+            ...(userId === undefined
+              ? {
+                  take: 1,
+                  where: {
+                    role: {
+                      role: "OWNER",
+                    },
+                  },
+                }
+              : {}),
             select: {
               user: {
                 select: {

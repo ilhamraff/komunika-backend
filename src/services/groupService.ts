@@ -11,7 +11,11 @@ export const getDiscoverPeoples = async (name?: string, userId?: string) => {
   return await groupRepositories.getDiscoverPeoples(name, userId);
 };
 
-export const findDetailGroup = async (id: string, userId: string) => {
+export const findDetailGroup = async (id: string) => {
+  return await groupRepositories.findDetailGroup(id);
+};
+
+export const findDetailMyGroup = async (id: string, userId: string) => {
   return await groupRepositories.findDetailGroup(id, userId);
 };
 

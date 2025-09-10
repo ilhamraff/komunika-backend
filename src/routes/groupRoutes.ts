@@ -39,6 +39,12 @@ groupRoutes.get("/own-groups", verifyToken, groupController.getMyOwnGroups);
 
 groupRoutes.get("/groups/:id", verifyToken, groupController.findDetailGroup);
 
+groupRoutes.get(
+  "/my-groups/:id",
+  verifyToken,
+  groupController.findDetailMyGroup
+);
+
 groupRoutes.get("/peoples", verifyToken, groupController.getDiscoverPeoples);
 
 groupRoutes.post(
