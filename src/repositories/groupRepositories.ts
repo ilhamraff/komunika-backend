@@ -219,6 +219,11 @@ export const findDetailGroup = async (id: string, userId?: string) => {
                 },
               },
               joinedAt: true,
+              role: {
+                select: {
+                  role: true,
+                },
+              },
             },
           },
           _count: {
