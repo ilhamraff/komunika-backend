@@ -124,7 +124,7 @@ export const upsertPaidGroup = async (
 
   const group = await prismaClient.group.upsert({
     where: {
-      id: groupId,
+      id: groupId ?? "",
     },
     create: {
       photo: photo ?? "",
