@@ -26,7 +26,7 @@ export const storageGroupPhoto = multer.diskStorage({
 
 export const storageGroupPaidPhoto = multer.diskStorage({
   destination: function (req, file, cb) {
-    if (file.filename === "photo") {
+    if (file.fieldname === "photo") {
       cb(null, "public/assets/uploads/groups");
     } else {
       cb(null, "public/assets/uploads/group_assets");

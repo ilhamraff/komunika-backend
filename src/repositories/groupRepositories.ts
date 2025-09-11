@@ -148,7 +148,7 @@ export const upsertPaidGroup = async (
       },
     },
     update: {
-      photo: photo ?? "",
+      photo: photo,
       name: data.name,
       about: data.about,
       price: Number.parseInt(data.price),
