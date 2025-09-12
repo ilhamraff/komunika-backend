@@ -126,7 +126,13 @@ export const getBalance = async (userId: string) => {
     return acc;
   }, 0);
 
-  const totalPayouts = payouts.reduce((acc, curr) => acc + curr.amount, 0);
+  const totalPayouts = payouts.reduce((acc, curr) => {
+    if (curr.status === "SUCCESS") {
+      return acc + curr.amount;
+    }
+
+    return acc;
+  }, 0);
 
   return totalRevenue - totalPayouts;
 };
