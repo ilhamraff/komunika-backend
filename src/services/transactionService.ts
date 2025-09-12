@@ -3,6 +3,7 @@ import * as groupRepositories from "../repositories/groupRepositories";
 import * as transactionRepositories from "../repositories/transactionRepositories";
 import * as userRepositories from "../repositories/userRepositories";
 import { WithdrawValues } from "../utils/schema/transaction";
+import dayjs from "dayjs";
 
 export const findTransactionById = async (id: string) => {
   return await transactionRepositories.findTransactionById(id);
@@ -143,7 +144,36 @@ export const getRevenueStat = async (userId: string) => {
     return acc;
   }, 0);
 
-  const totalPayouts = payouts.reduce((acc, curr) => acc + curr.amount, 0);
+  const last8Months = Array.from({ length: 8 }, (_, i) =>
+    dayjs().subtract(i, "month")
+  ).reverse();
+
+  const transactionsPerMonths = last8Months.reduce<Record<string, number>>(
+    (acc, date) => {
+      const trxMonth = transactions
+        .filter((trx) => dayjs(date).isSame(dayjs(trx.createdAt), "M"))
+        .filter((trx) => trx.type === "SUCCESS");
+
+      const totalTrxMonth = trxMonth.reduce((acc, trx) => acc + trx.price, 0);
+
+      if (acc[date.format("MMM")]) {
+        acc[date.format("MMM")] = 0;
+      }
+
+      acc[date.format("MMM")] = totalTrxMonth;
+
+      return acc;
+    },
+    {}
+  );
+
+  const totalPayouts = payouts.reduce((acc, curr) => {
+    if (curr.status === "SUCCESS") {
+      return acc + curr.amount;
+    }
+
+    return acc;
+  }, 0);
 
   const balance = totalRevenue - totalPayouts;
 
@@ -166,6 +196,7 @@ export const getRevenueStat = async (userId: string) => {
     totalVipMembers: totalVipMembers,
     totalRevenue: totalRevenue,
     latestMembersVip: latestMembersVip,
+    transactionsPerMonths,
   };
 };
 
