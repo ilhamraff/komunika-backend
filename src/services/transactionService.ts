@@ -210,6 +210,10 @@ export const getHistoryPayouts = async (userId: string) => {
   return await transactionRepositories.getMyPayouts(userId);
 };
 
+export const getAllHistoryPayouts = async () => {
+  return await transactionRepositories.getAllPayouts();
+};
+
 export const createWithdraw = async (data: WithdrawValues, userId: string) => {
   const balance = await getBalance(userId);
 

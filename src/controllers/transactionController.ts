@@ -117,6 +117,24 @@ export const getHistoryPayouts = async (
   }
 };
 
+export const getAllHistoryPayouts = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = await transactionService.getAllHistoryPayouts();
+
+    return res.json({
+      success: true,
+      message: "Success get history payouts",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getBalance = async (
   req: CustomRequest,
   res: Response,

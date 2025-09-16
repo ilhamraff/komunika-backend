@@ -41,3 +41,19 @@ export default async function verifyToken(
     });
   }
 }
+
+export const verifyAdmin = (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = req.user;
+
+  if (user && user.role === "ADMIN") {
+    next();
+  } else {
+    return res.status(401).json({
+      message: "Unauthorized",
+    });
+  }
+};

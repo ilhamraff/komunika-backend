@@ -82,6 +82,14 @@ export const getMyPayouts = async (userId: string) => {
   });
 };
 
+export const getAllPayouts = async () => {
+  return await prismaClient.payout.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+};
+
 export const createWithdraw = async (data: WithdrawValues, userId: string) => {
   return await prismaClient.payout.create({
     data: {

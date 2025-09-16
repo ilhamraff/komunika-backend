@@ -1,5 +1,5 @@
 import express from "express";
-import verifyToken from "../middlewares/verifyToken";
+import verifyToken, { verifyAdmin } from "../middlewares/verifyToken";
 import * as transactionController from "../controllers/transactionController";
 
 const transactionRoutes = express.Router();
@@ -42,6 +42,13 @@ transactionRoutes.get(
   "/balance",
   verifyToken,
   transactionController.getBalance
+);
+
+transactionRoutes.get(
+  "/admin/payouts",
+  verifyToken,
+  verifyAdmin,
+  transactionController.getAllHistoryPayouts
 );
 
 export default transactionRoutes;
