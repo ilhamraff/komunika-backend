@@ -187,3 +187,30 @@ export const createWithdraw = async (
     next(error);
   }
 };
+
+export const updateWithdraw = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+
+    if (!req.file) {
+      return res.status(400).json({
+        message: "Proof is required",
+        data: null,
+      });
+    }
+
+    const data = await transactionService.updateWithdraw(id, req.file);
+
+    return res.json({
+      success: true,
+      message: "Success update withdraw",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

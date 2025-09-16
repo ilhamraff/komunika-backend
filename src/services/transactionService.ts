@@ -223,3 +223,11 @@ export const createWithdraw = async (data: WithdrawValues, userId: string) => {
 
   return await transactionRepositories.createWithdraw(data, userId);
 };
+
+export const updateWithdraw = async (id: string, file: Express.Multer.File) => {
+  return await transactionRepositories.updateWithdraw(
+    id,
+    "SUCCESS",
+    file.filename
+  );
+};

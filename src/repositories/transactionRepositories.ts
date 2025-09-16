@@ -102,3 +102,19 @@ export const createWithdraw = async (data: WithdrawValues, userId: string) => {
     },
   });
 };
+
+export const updateWithdraw = async (
+  id: string,
+  status: TransactionType,
+  filename: string
+) => {
+  return await prismaClient.payout.update({
+    where: {
+      id: id,
+    },
+    data: {
+      status: status,
+      proof: filename,
+    },
+  });
+};

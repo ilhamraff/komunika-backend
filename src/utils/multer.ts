@@ -51,3 +51,15 @@ export const storagePhotoAttach = multer.diskStorage({
     cb(null, filename);
   },
 });
+
+export const storagePhotoProof = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/assets/uploads/approval");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const extension = file.mimetype.split("/")[1];
+    const filename = `approval-${uniqueSuffix}.${extension}`;
+    cb(null, filename);
+  },
+});
